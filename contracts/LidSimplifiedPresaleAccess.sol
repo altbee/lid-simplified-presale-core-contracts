@@ -45,17 +45,17 @@ contract LidSimplifiedPresaleAccess is Initializable {
     function getAccessTime(address account, uint startTime) external view returns (uint accessTime) {
         uint stakeValue = staking.stakeValue(account);
         if (stakeValue == 0) return startTime;
-        if (stakeValue >= decayCurve[0]) return startTime.sub(24 hours);
+        if (stakeValue >= decayCurve[0]) return startTime;
         uint i=0;
         uint stake2 = decayCurve[0];
         while (stake2 > stakeValue && i < 24) {
             i++;
             stake2 = decayCurve[i];
         }
-        if (stake2 == stakeValue) return startTime.sub(24 hours).add(i.add(1).mul(1 hours));
+        if (stake2 == stakeValue) return startTime.add(i.add(1).mul(1 hours));
         return interpolate(
-            startTime.sub(24 hours).add(i.mul(1 hours)),
-            startTime.sub(24 hours).add(i.add(1).mul(1 hours)),
+            startTime.add(i.mul(1 hours)),
+            startTime.add(i.add(1).mul(1 hours)),
             decayCurve[i.sub(1)],
             decayCurve[i],
             stakeValue
