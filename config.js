@@ -19,18 +19,13 @@ config.redeemer = {
     ether("300"),
     ether("620"),
     ether("1260"),
-    ether("2540")
+    ether("2540"),
   ],
-  bonusRangeBP: [
-    5000,
-    4000,
-    3000,
-    2000,
-    1000,
-    500,
-    250,
-    0
-  ],
+  bonusRangeBP: [5000, 4000, 3000, 2000, 1000, 500, 250, 0],
+};
+
+config.presaleAccess = {
+  accessTime: 1598630340,
 };
 
 config.presale = {
