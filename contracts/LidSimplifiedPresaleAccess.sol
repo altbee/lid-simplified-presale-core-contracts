@@ -52,10 +52,19 @@ contract LidSimplifiedPresaleAccess is Initializable {
         //Consider binary search eg minime? Not sure
     }
 
-    //Linearly interpolates between valueHigh and valueLow, based on distance starting from valueHigh (eg: 2 seconds after the hour)
-    function interpolate(uint valueHigh, uint valueLow, uint maxDistance, uint distance) public pure returns (uint) {
-        return valueHigh.sub(
-            valueHigh.sub(valueLow).mul(maxDistance).div(distance)
+
+    function interpolate(uint time1, uint time2, uint stake1, uint stake2, uint stakeValue) public pure returns (uint) {
+        require(stakeValue > stake2, "stakeValue must be gt stake2");
+        require(stakeValue < stake1, "stakeValue must be lt stake1");
+        require(time2 > time1, "time2 must be after time1");
+        return time1.mul(
+            stakeValue.sub(stake2)
+        ).add(
+            time2.mul(
+                stake1.sub(stakeValue)
+            )
+        ).div(
+            stake1.sub(stake2)
         );
     }
 }
