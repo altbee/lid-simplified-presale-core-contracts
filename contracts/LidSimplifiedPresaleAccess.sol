@@ -9,7 +9,7 @@ contract LidSimplifiedPresaleAccess is Initializable {
     using SafeMath for uint;
     LidStaking private staking;
 
-    uint[25] private decayCurve;
+    uint[24] private decayCurve;
 
     function initialize(LidStaking _staking) external initializer {
         staking = _staking;
@@ -38,22 +38,38 @@ contract LidSimplifiedPresaleAccess is Initializable {
             3171,
             2378,
             1784,
-            1338,
             0
         ];
     }
 
     function getAccessTime(address account, uint startTime) external view returns (uint accessTime) {
         uint stakeValue = staking.stakeValue(account);
-        //TODO: Use linear interpolation to return the time that the account will have access.
-        //Max distances should be 1 hour
-        //Value high should be the lowest value on the decayCurve greater than the stake value.
-        //Value low should be the highest value on the decayCurve lower than the stake value.
-        //Consider binary search eg minime? Not sure
+        if (stakeValue == 0) return startTime;
+        if (stakeValue >= decayCurve[0]) return startTime.sub(24 hours);
+        uint i=0;
+        uint stake2 = decayCurve[0];
+        while (stake2 > stakeValue && i < 24) {
+            i++;
+            stake2 = decayCurve[i];
+        }
+        if (stake2 == stakeValue) return startTime.sub(24 hours).add(i.add(1).mul(1 hours));
+        return interpolate(
+            startTime.sub(24 hours).add(i.mul(1 hours)),
+            startTime.sub(24 hours).add(i.add(1).mul(1 hours)),
+            decayCurve[i.sub(1)],
+            decayCurve[i],
+            stakeValue
+        );
     }
 
-
-    function interpolate(uint time1, uint time2, uint stake1, uint stake2, uint stakeValue) public pure returns (uint) {
+    //Returns the linearly interpolated time between two timeX/stakeX points based on a stakeValue.
+    function interpolate(
+        uint time1,
+        uint time2,
+        uint stake1,
+        uint stake2,
+        uint stakeValue
+    ) public pure returns (uint) {
         require(stakeValue > stake2, "stakeValue must be gt stake2");
         require(stakeValue < stake1, "stakeValue must be lt stake1");
         require(time2 > time1, "time2 must be after time1");
