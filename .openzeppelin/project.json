@@ -1,7 +1,34 @@
 {
   "manifestVersion": "2.2",
-  "contracts": {},
+  "contracts": {
+    "LidSimplifiedPresaleTimer": "LidSimplifiedPresaleTimer",
+    "LidSimplifiedPresaleRedeemer": "LidSimplifiedPresaleRedeemer",
+    "LidTimeLock": "LidTimeLock",
+    "LidTimeLockDev": "LidTimeLock",
+    "LidTimeLockStaking": "LidTimeLock",
+    "LidTimeLockMarketing": "LidTimeLock",
+    "LidSimplifiedPresale": "LidSimplifiedPresale",
+    "LidSimplifiedPresaleAccess": "LidSimplifiedPresaleAccess",
+    "LidStaking": "LidStaking",
+    "Token": "Token"
+  },
   "dependencies": {},
   "name": "lid-simplified-presale-contracts",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "telemetryOptIn": true,
+  "compiler": {
+    "manager": "openzeppelin",
+    "solcVersion": "0.5.16",
+    "artifactsDir": "build/contracts",
+    "contractsDir": "contracts",
+    "compilerSettings": {
+      "optimizer": {
+        "enabled": false,
+        "runs": "200"
+      }
+    },
+    "typechain": {
+      "enabled": false
+    }
+  }
 }
